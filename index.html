@@ -1,0 +1,713 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ماركت ابو الحسن - واجهة التطبيق</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-0 sm:p-4 selection:bg-emerald-500 selection:text-white">
+
+  <!-- Mobile Frame Container -->
+  <div class="w-full max-w-md bg-[#F8FAFC] sm:rounded-[40px] shadow-2xl overflow-hidden flex flex-col min-h-screen sm:min-h-[844px] relative sm:border-[8px] sm:border-slate-800">
+    
+    <!-- 1. شريط الحالة العلوي -->
+    <header class="bg-[#1E40AF] text-white px-6 pt-3 pb-2 flex items-center justify-between text-xs font-semibold select-none shadow-sm z-20">
+      <div id="live-time" class="tracking-wider text-sm font-bold">09:41</div>
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <rect x="2" y="16" width="3.5" height="5" rx="0.8"/>
+          <rect x="7.5" y="12" width="3.5" height="9" rx="0.8"/>
+          <rect x="13" y="8" width="3.5" height="13" rx="0.8"/>
+          <rect x="18.5" y="4" width="3.5" height="17" rx="0.8"/>
+        </svg>
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.55 0 6.78 1.44 9.15 3.76L12 19.33 2.85 11.26C5.22 8.94 8.45 7.5 12 7.5z"/>
+        </svg>
+        <div class="flex items-center gap-0.5">
+          <div class="w-5 h-2.5 border border-white rounded-[3px] p-[1.5px] flex items-center">
+            <div class="h-full w-4/5 bg-emerald-400 rounded-[1px]"></div>
+          </div>
+          <div class="w-[1.5px] h-1.5 bg-white rounded-r-[1px]"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. الترويسة وشريط البحث الرئيسي -->
+    <section class="bg-gradient-to-b from-[#15803D] to-[#166534] text-white px-5 pt-4 pb-6 rounded-b-[28px] shadow-md relative z-10">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-xs text-emerald-200 font-medium block">أهلاً بك في</span>
+          <h1 class="text-2xl font-black tracking-tight text-white drop-shadow-sm cursor-pointer" onclick="closeCategoryView()">
+            ماركت ابو الحسن
+          </h1>
+        </div>
+
+        <div class="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white shadow-inner">
+          <svg class="w-7 h-7 fill-current text-emerald-200" viewBox="0 0 24 24">
+            <path d="M12 2a4.5 4.5 0 0 0-4.5 4.5c0 2.49 2.01 4.5 4.5 4.5.4 0 .78-.06 1.15-.17-.38.86-.65 1.83-.65 2.87v.3c-1.1-.3-2.31-.5-3.5-.5-3.31 0-6 2.69-6 6h2c0-2.21 1.79-4 4-4 .89 0 1.73.29 2.41.79l2.59 1.91 3.5-1.75-1.5-3-2.5 1.25V14c0-2.21 1.79-4 4-4h1V8h-1c-1.1 0-2-.9-2-2 0-2.49-2.01-4-4.5-4zm0 2c1.38 0 2.5 1.12 2.5 2.5S13.38 9 12 9s-2.5-1.12-2.5-2.5S10.62 4 12 4z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- حقل البحث -->
+      <div class="relative">
+        <input 
+          id="search-input"
+          type="text" 
+          placeholder="ابحث عن منتج..." 
+          oninput="handleSearch(this.value)"
+          class="w-full bg-white text-slate-800 placeholder-slate-400 text-sm rounded-2xl py-3 pr-11 pl-10 shadow-sm border border-white/20 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition-all"
+        />
+        <div class="absolute right-3.5 top-3.5 text-slate-400 pointer-events-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M16.65 11a5.65 5.65 0 11-11.3 0 5.65 5.65 0 0111.3 0z"/>
+          </svg>
+        </div>
+        <button onclick="triggerToast('تم تفعيل البحث الصوتي السريع')" class="absolute left-3 top-2.5 p-1 text-slate-400 hover:text-emerald-600 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- منطقة المحتوى القابلة للتمرير -->
+    <main class="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+      
+      <!-- شاشة العرض الرئيسية: التبويبات الستة وميزة اليوم -->
+      <div id="home-view" class="space-y-6">
+        <div>
+          <div class="flex items-center justify-between mb-3 px-1">
+            <h2 class="text-slate-800 font-bold text-base">الأقسام الرئيسية</h2>
+            <span class="text-xs text-emerald-600 font-semibold cursor-pointer">اختر قسماً للتصفح</span>
+          </div>
+
+          <!-- شبكة الأقسام الستة -->
+          <div class="grid grid-cols-3 gap-3.5">
+            
+            <!-- 1. مشروبات (زهري) -->
+            <div onclick="openCategory('drinks')" class="group cursor-pointer bg-white p-3 rounded-2xl border border-pink-100 shadow-[0_4px_12px_rgba(244,114,182,0.08)] hover:shadow-md transition-all active:scale-95 flex flex-col items-center text-center">
+              <div class="w-14 h-14 rounded-2xl bg-[#FCE7F3] text-[#DB2777] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 9h12l-1.5 11h-9L6 9z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 9h14M15 4l-3 5m0-5h2"/>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-pink-600 transition-colors">مشروبات</span>
+            </div>
+
+            <!-- 2. ألبان (أزرق) -->
+            <div onclick="openCategory('dairy')" class="group cursor-pointer bg-white p-3 rounded-2xl border border-blue-100 shadow-[0_4px_12px_rgba(96,165,250,0.08)] hover:shadow-md transition-all active:scale-95 flex flex-col items-center text-center">
+              <div class="w-14 h-14 rounded-2xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 3h6v2H9V3z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 5v2.5L7 11v9a2 2 0 002 2h6a2 2 0 002-2v-9l-3-3.5V5"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 14h10"/>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-blue-600 transition-colors">ألبان</span>
+            </div>
+
+            <!-- 3. مواد تموينية (بيج/رملي) -->
+            <div onclick="openCategory('pantry')" class="group cursor-pointer bg-white p-3 rounded-2xl border border-amber-100 shadow-[0_4px_12px_rgba(217,119,6,0.08)] hover:shadow-md transition-all active:scale-95 flex flex-col items-center text-center">
+              <div class="w-14 h-14 rounded-2xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 10h16l-1.5 9.5a2 2 0 01-2 1.5H7.5a2 2 0 01-2-1.5L4 10z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 10L12 4l3 6"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14v3m6-3v3"/>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-amber-600 transition-colors">مواد تموينية</span>
+            </div>
+
+            <!-- 4. منظفات (بنفسجي) -->
+            <div onclick="openCategory('detergents')" class="group cursor-pointer bg-white p-3 rounded-2xl border border-purple-100 shadow-[0_4px_12px_rgba(168,85,247,0.08)] hover:shadow-md transition-all active:scale-95 flex flex-col items-center text-center">
+              <div class="w-14 h-14 rounded-2xl bg-[#F3E8FF] text-[#9333EA] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 4h6m-5 3h4l1 3H9l1-3z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h8v10a2 2 0 01-2 2h-4a2 2 0 01-2-2V10z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 13.5v5m3-5v5"/>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-purple-600 transition-colors">منظفات</span>
+            </div>
+
+            <!-- 5. خضروات (أخضر) -->
+            <div onclick="openCategory('vegetables')" class="group cursor-pointer bg-white p-3 rounded-2xl border border-emerald-100 shadow-[0_4px_12px_rgba(16,185,129,0.08)] hover:shadow-md transition-all active:scale-95 flex flex-col items-center text-center">
+              <div class="w-14 h-14 rounded-2xl bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 6l4-4m-2 4l3-1m-4 4l1-3"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5C18 11 15 15.5 10 20.5L3.5 21l.5-6.5C9 9.5 13 6 15.5 8.5z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l2-1m1 4l2-1"/>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-emerald-600 transition-colors">خضروات</span>
+            </div>
+
+            <!-- 6. فواكه (أحمر) -->
+            <div onclick="openCategory('fruits')" class="group cursor-pointer bg-white p-3 rounded-2xl border border-rose-100 shadow-[0_4px_12px_rgba(244,63,94,0.08)] hover:shadow-md transition-all active:scale-95 flex flex-col items-center text-center">
+              <div class="w-14 h-14 rounded-2xl bg-[#FFE4E6] text-[#E11D48] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4c.5-1.5 2-2 3-2"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 7c-2-2-5-1-6 2s.5 6 3 9c1.5 1.8 2.5 2 3 2s1.5-.2 3-2c2.5-3 4-6 3-9s-4-4-6-2z"/>
+                </svg>
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-rose-600 transition-colors">فواكه</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ميزة اليوم -->
+        <section class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <button onclick="addFeatureToCart()" class="w-7 h-7 rounded-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-md shadow-orange-500/30 transition-transform active:scale-90" title="إضافة ميزة اليوم">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+              </button>
+              <h3 class="font-extrabold text-slate-800 text-base">ميزة اليوم</h3>
+            </div>
+            <span class="text-[11px] font-bold bg-orange-100 text-orange-700 px-2.5 py-0.5 rounded-full">عرض طازج</span>
+          </div>
+
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-3.5 border border-orange-200/60 flex items-center gap-3.5">
+            <div class="w-14 h-14 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center shrink-0">
+              <span class="text-2xl">✨</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 class="font-bold text-sm text-slate-800 truncate">سلة التوفير العائلية اليومية</h4>
+              <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">تشكيلة مختارة من أفضل المواد التموينية والخضار</p>
+              <div class="flex items-center justify-between mt-2">
+                <span class="text-xs font-black text-emerald-700">35 ₪ بدلاً من 45 ₪</span>
+                <button onclick="addFeatureToCart()" class="text-xs bg-orange-500 text-white font-bold px-2.5 py-1 rounded-lg hover:bg-orange-600">أضف للسلة</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- شاشة تفاصيل القسم المختار وعرض المنتجات التابعة له -->
+      <div id="category-view" class="hidden space-y-4">
+        <!-- ترويسة القسم المختار مع زر العودة وزر إضافة منتج جديد -->
+        <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+          <div class="flex items-center gap-2">
+            <button onclick="closeCategoryView()" class="p-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+              <svg class="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <div class="flex items-center gap-2">
+              <div id="cat-badge" class="w-8 h-8 rounded-lg flex items-center justify-center text-sm"></div>
+              <h3 id="cat-title" class="font-bold text-slate-800 text-base">اسم القسم</h3>
+            </div>
+          </div>
+
+          <!-- زر إضافة منتج جديد في هذا التبويب -->
+          <button onclick="openAddProductModal()" class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>إضافة منتج</span>
+          </button>
+        </div>
+
+        <!-- قائمة المنتجات للقسم المختار -->
+        <div id="products-container" class="grid grid-cols-1 gap-3">
+          <!-- تُحقن المنتجات عبر JavaScript -->
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 5. الشريط السفلي مع سلة التسوق ومساعد البحث -->
+    <footer class="bg-white border-t border-slate-100 px-4 py-3 shadow-lg z-30">
+      <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2">
+        
+        <!-- زر عربة التسوق الأخضر مع العداد التفاعلي -->
+        <button id="cart-button" onclick="showCartDetails()" class="relative w-11 h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-sm active:scale-95 transition-all">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+        </button>
+
+        <!-- مدخل الأسئلة والطلبات المباشرة -->
+        <div class="flex-1 flex items-center gap-2">
+          <input 
+            id="ai-assistant-input"
+            type="text" 
+            placeholder="اسأل وذاك أي شيء..."
+            class="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+            onkeypress="if(event.key === 'Enter') sendPrompt()"
+          />
+          <button onclick="sendPrompt()" class="text-emerald-600 hover:text-emerald-700 p-1.5 active:scale-90 transition-transform">
+            <svg class="w-5 h-5 transform -rotate-90" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </footer>
+
+    <!-- نافذة منبثقة لإضافة منتج جديد (Modal) -->
+    <div id="add-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+      <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4 border border-slate-100">
+        <div class="flex items-center justify-between border-b pb-2.5">
+          <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+            <span class="text-emerald-600">🛒</span>
+            <span>إضافة منتج جديد لـ <span id="modal-cat-name" class="text-emerald-700"></span></span>
+          </h3>
+          <button onclick="closeAddProductModal()" class="text-slate-400 hover:text-slate-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <form id="add-product-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">اسم المنتج</label>
+            <input type="text" id="prod-name" required placeholder="مثال: أرز بسمتي فاخر" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">السعر (شيكل ₪)</label>
+              <input type="number" id="prod-price" step="0.5" required placeholder="15" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">صورة تعبيرية</label>
+              <select id="prod-icon" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="🌾">🌾 حبوب ومؤونة</option>
+                <option value="🧃">🧃 عصير ومشروب</option>
+                <option value="🥛">🥛 حليب وألبان</option>
+                <option value="🧴">🧴 منظف وعناية</option>
+                <option value="🍅">🍅 خضروات طازجة</option>
+                <option value="🍎">🍎 فواكه موسمية</option>
+                <option value="☕">☕ شاي وبن</option>
+                <option value="🥖">🥖 مخبوزات</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">رابط صورة مخصصة (اختياري)</label>
+            <input type="url" id="prod-img" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">وصف المنتج</label>
+            <textarea id="prod-desc" rows="2" required placeholder="اكتب وصفاً موجزاً، الوزن، أو الحجم..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-md">
+              حفظ وإدراج المنتج
+            </button>
+            <button type="button" onclick="closeAddProductModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-sm">
+              إلغاء
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- نافذة تفاصيل السلة -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end justify-center hidden">
+      <div class="bg-white w-full max-w-md rounded-t-[32px] p-5 max-h-[80vh] flex flex-col space-y-4">
+        <div class="flex items-center justify-between border-b pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🛍️</span>
+            <h3 class="font-extrabold text-slate-800 text-base">سلة مشتريات ماركت أبو الحسن</h3>
+          </div>
+          <button onclick="closeCartModal()" class="text-slate-400 hover:text-slate-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="cart-items-list" class="overflow-y-auto flex-1 space-y-2.5 divide-y divide-slate-100">
+          <!-- تُدرج محتويات السلة برمجياً -->
+        </div>
+
+        <div class="border-t pt-3 space-y-3">
+          <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+            <span>الإجمالي التقريبي:</span>
+            <span id="cart-total-price" class="text-emerald-700 text-base">0 ₪</span>
+          </div>
+          <button onclick="completeOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl text-sm shadow-md">
+            تأكيد الطلب وتجهيزه
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- إشعار Toast تفاعلي -->
+    <div id="toast" class="absolute top-16 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white px-4 py-2.5 rounded-full text-xs font-semibold shadow-xl transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <span id="toast-message">رسالة إشعار</span>
+    </div>
+
+  </div>
+
+  <script>
+    // قاعدة بيانات المنتجات الأولية لكل تبويب
+    const categoriesData = {
+      drinks: {
+        title: "مشروبات",
+        color: "bg-pink-100 text-pink-700",
+        badge: "🧃",
+        products: [
+          { id: 101, name: "عصير برتقال طبيعي 1 لتر", price: 7.0, desc: "عصير طازج معبأ يومياً بدون سكر مضاف", icon: "🍊", img: "" },
+          { id: 102, name: "شاي أسود نخب أول 100 كيس", price: 12.0, desc: "شاي سيلاني عالي الجودة لمذاق أصيل", icon: "☕", img: "" },
+          { id: 103, name: "مياه معدنية نقية (كرتون 12 عبوة)", price: 10.0, desc: "مياه شرب معبأة ومنقاة خفيفة على المعدة", icon: "💧", img: "" }
+        ]
+      },
+      dairy: {
+        title: "ألبان وأجبان",
+        color: "bg-blue-100 text-blue-700",
+        badge: "🥛",
+        products: [
+          { id: 201, name: "لبن زبادي طازج 1 كغم", price: 6.5, desc: "لبن رائب كامل الدسم وغني بالبروتين", icon: "🥛", img: "" },
+          { id: 202, name: "جبنة بيضاء بلدية (نصف كيلو)", price: 14.0, desc: "جبنة مغلية ومتبلة بحبة البركة والمستكة", icon: "🧀", img: "" },
+          { id: 203, name: "لبنة بلدية بزيت الزيتون", price: 9.0, desc: "لبنة مكبوسة بطعم غني ومميز", icon: "🍶", img: "" }
+        ]
+      },
+      pantry: {
+        title: "مواد تموينية",
+        color: "bg-amber-100 text-amber-700",
+        badge: "🌾",
+        products: [
+          { id: 301, name: "أرز بسمتي هندي ممتاز 5 كغم", price: 32.0, desc: "حبة طويلة نقية ومثالية للكبسة والأوزي", icon: "🍚", img: "" },
+          { id: 302, name: "زيت ذرة نقي للقلي 3 لتر", price: 26.0, desc: "زيت خفيف وصحي خالٍ من الكوليسترول", icon: "🛢️", img: "" },
+          { id: 303, name: "سكر أبيض ناعم 5 كغم", price: 18.0, desc: "سكر نقي سريع الذوبان للمشروبات والحلويات", icon: "🧂", img: "" }
+        ]
+      },
+      detergents: {
+        title: "منظفات ومعقمات",
+        color: "bg-purple-100 text-purple-700",
+        badge: "🧴",
+        products: [
+          { id: 401, name: "مسحوق غسيل أوتوماتيك 4 كغم", price: 25.0, desc: "برائحة نسيم الصباح، يزيل أصعب البقع", icon: "🧼", img: "" },
+          { id: 402, name: "سائل جلي صحون برائحة الليمون 1 لتر", price: 5.5, desc: "رغوة وفيرة وقوة فائقة على الدهون", icon: "🧴", img: "" },
+          { id: 403, name: "كلور معقم ومطهر للأرضيات 2 لتر", price: 6.0, desc: "حماية تامة من الجراثيم والميكروبات", icon: "✨", img: "" }
+        ]
+      },
+      vegetables: {
+        title: "خضروات طازجة",
+        color: "bg-emerald-100 text-emerald-700",
+        badge: "🥕",
+        products: [
+          { id: 501, name: "طماطم كرزية وبلدية 1 كغم", price: 3.5, desc: "حمراء وممتلئة، مقطوفة يومياً من مزارعنا", icon: "🍅", img: "" },
+          { id: 502, name: "بطاطا حلوة وعادية 2 كغم", price: 5.0, desc: "درنات متماسكة خالية من الشوائب ومناسبة للطهي", icon: "🥔", img: "" },
+          { id: 503, name: "خيار بلدي طازج 1 كغم", price: 3.0, desc: "مقرمش وطازج للسلطات اليومية", icon: "🥒", img: "" }
+        ]
+      },
+      fruits: {
+        title: "فواكه موسمية",
+        color: "bg-rose-100 text-rose-700",
+        badge: "🍎",
+        products: [
+          { id: 601, name: "تفاح أحمر سكري 1 كغم", price: 7.0, desc: "طعم سكري لذيذ ومقرمش غني بالفيتامينات", icon: "🍎", img: "" },
+          { id: 602, name: "موز صومالي ممتاز 1 كغم", price: 5.5, desc: "موز أصفر ناضج ومغذي للأطفال والرياضيين", icon: "🍌", img: "" },
+          { id: 603, name: "برتقال أبو صرة للعصير والأكل 2 كغم", price: 6.0, desc: "مليء بالعصارة والفائدة", icon: "🍊", img: "" }
+        ]
+      }
+    };
+
+    let currentActiveCategoryKey = 'drinks';
+    let cart = [];
+
+    // تحديث الساعة المباشرة
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      const el = document.getElementById('live-time');
+      if (el) el.innerText = `${hours}:${minutes}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // إظهار رسائل التنبيه العلوية
+    let toastTimeout;
+    function triggerToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      if (!toast || !toastMsg) return;
+
+      toastMsg.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+        toast.classList.remove('opacity-100');
+      }, 2300);
+    }
+
+    // فتح تفاصيل قسم معين
+    function openCategory(key) {
+      if (!categoriesData[key]) return;
+      currentActiveCategoryKey = key;
+      const cat = categoriesData[key];
+
+      document.getElementById('home-view').classList.add('hidden');
+      document.getElementById('category-view').classList.remove('hidden');
+
+      document.getElementById('cat-title').innerText = cat.title;
+      const badgeEl = document.getElementById('cat-badge');
+      badgeEl.className = `w-8 h-8 rounded-lg flex items-center justify-center text-sm ${cat.color}`;
+      badgeEl.innerText = cat.badge;
+
+      renderProducts(cat.products);
+    }
+
+    // العودة للرئيسية
+    function closeCategoryView() {
+      document.getElementById('category-view').classList.add('hidden');
+      document.getElementById('home-view').classList.remove('hidden');
+    }
+
+    // عرض بطاقات المنتجات
+    function renderProducts(list) {
+      const container = document.getElementById('products-container');
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 bg-white rounded-2xl border border-dashed border-slate-200">
+            <span class="text-3xl block mb-2">📦</span>
+            <p class="text-slate-500 text-xs">لا توجد منتجات مسجلة في هذا التبويب بعد.</p>
+            <button onclick="openAddProductModal()" class="mt-3 text-xs text-emerald-600 font-bold underline">أضف أول منتج الآن</button>
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-start gap-3 hover:shadow-md transition-shadow";
+        
+        // التحقق من وجود صورة مخصصة بالرابط أو الأيقونة
+        const imageMarkup = item.img ? `
+          <img src="${item.img}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80?text=منتج'" class="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-100">
+        ` : `
+          <div class="w-16 h-16 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-3xl shrink-0">
+            ${item.icon || '🛍️'}
+          </div>
+        `;
+
+        card.innerHTML = `
+          ${imageMarkup}
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-1">
+              <h4 class="font-bold text-sm text-slate-800 leading-snug">${item.name}</h4>
+              <span class="font-black text-emerald-700 text-sm whitespace-nowrap">${item.price.toFixed(1)} ₪</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>
+            <div class="mt-2.5 flex items-center justify-end">
+              <button onclick="addToCart('${item.name}', ${item.price})" class="flex items-center gap-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white px-3 py-1 rounded-lg text-xs font-bold transition-all active:scale-95">
+                <span>+</span>
+                <span>إضافة للسلة</span>
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // نوافذ إضافة منتج
+    function openAddProductModal() {
+      const cat = categoriesData[currentActiveCategoryKey];
+      document.getElementById('modal-cat-name').innerText = cat ? cat.title : '';
+      document.getElementById('add-product-form').reset();
+      document.getElementById('add-modal').classList.remove('hidden');
+    }
+
+    function closeAddProductModal() {
+      document.getElementById('add-modal').classList.add('hidden');
+    }
+
+    // استلام نموذج إضافة منتج جديد
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('prod-name').value.trim();
+      const price = parseFloat(document.getElementById('prod-price').value) || 0;
+      const desc = document.getElementById('prod-desc').value.trim();
+      const icon = document.getElementById('prod-icon').value;
+      const img = document.getElementById('prod-img').value.trim();
+
+      if (!name || !price) {
+        triggerToast('يرجى ملء جميع الحقول الأساسية');
+        return;
+      }
+
+      const newProduct = {
+        id: Date.now(),
+        name,
+        price,
+        desc,
+        icon,
+        img
+      };
+
+      // إضافة المنتج للقسم النشط
+      categoriesData[currentActiveCategoryKey].products.unshift(newProduct);
+      
+      closeAddProductModal();
+      renderProducts(categoriesData[currentActiveCategoryKey].products);
+      triggerToast(`تمت إضافة "${name}" بنجاح في قسم ${categoriesData[currentActiveCategoryKey].title}`);
+    }
+
+    // إدارة السلة
+    function addToCart(name, price) {
+      const existing = cart.find(i => i.name === name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ name, price, qty: 1 });
+      }
+      updateCartBadge();
+      triggerToast(`أُضيف للسلة: ${name}`);
+    }
+
+    function addFeatureToCart() {
+      addToCart('سلة التوفير العائلية اليومية', 35.0);
+    }
+
+    function updateCartBadge() {
+      const totalCount = cart.reduce((acc, item) => acc + item.qty, 0);
+      document.getElementById('cart-count').innerText = totalCount;
+    }
+
+    function showCartDetails() {
+      const listContainer = document.getElementById('cart-items-list');
+      listContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-8">
+            <span class="text-4xl block mb-2">🛒</span>
+            <p class="text-slate-500 text-sm">سلتك في ماركت أبو الحسن فارغة حالياً</p>
+          </div>
+        `;
+        document.getElementById('cart-total-price').innerText = '0 ₪';
+      } else {
+        let total = 0;
+        cart.forEach((item, index) => {
+          const subtotal = item.price * item.qty;
+          total += subtotal;
+
+          const row = document.createElement('div');
+          row.className = "py-2 flex items-center justify-between";
+          row.innerHTML = `
+            <div>
+              <p class="text-xs font-bold text-slate-800">${item.name}</p>
+              <span class="text-[11px] text-slate-500">${item.price} ₪ × ${item.qty}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-emerald-700">${subtotal.toFixed(1)} ₪</span>
+              <button onclick="removeCartItem(${index})" class="text-red-400 hover:text-red-600 text-xs p-1">✕</button>
+            </div>
+          `;
+          listContainer.appendChild(row);
+        });
+        document.getElementById('cart-total-price').innerText = `${total.toFixed(1)} ₪`;
+      }
+
+      document.getElementById('cart-modal').classList.remove('hidden');
+    }
+
+    function removeCartItem(idx) {
+      cart.splice(idx, 1);
+      updateCartBadge();
+      showCartDetails();
+    }
+
+    function closeCartModal() {
+      document.getElementById('cart-modal').classList.add('hidden');
+    }
+
+    function completeOrder() {
+      if (cart.length === 0) {
+        triggerToast('السلة فارغة، أضف بعض المنتجات أولاً');
+        return;
+      }
+      cart = [];
+      updateCartBadge();
+      closeCartModal();
+      triggerToast('تم تأكيد طلبك بنجاح وسيبدأ تجهيزه فوراً!');
+    }
+
+    // محاكاة الإدخال في حقل "اسأل وذاك أي شيء..."
+    function sendPrompt() {
+      const input = document.getElementById('ai-assistant-input');
+      const val = input.value.trim();
+      if (!val) {
+        triggerToast('اكتب طلبك أو استفسارك هنا');
+        return;
+      }
+      triggerToast(`جاري الاستعلام عن: "${val}"`);
+      input.value = '';
+    }
+
+    // البحث المباشر
+    function handleSearch(query) {
+      query = query.trim().toLowerCase();
+      if (!query) {
+        if (!document.getElementById('category-view').classList.contains('hidden')) {
+          renderProducts(categoriesData[currentActiveCategoryKey].products);
+        }
+        return;
+      }
+
+      // البحث في جميع الأقسام
+      let results = [];
+      Object.values(categoriesData).forEach(cat => {
+        cat.products.forEach(p => {
+          if (p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query)) {
+            results.push(p);
+          }
+        });
+      });
+
+      // إظهار النتائج في صفحة القسم
+      document.getElementById('home-view').classList.add('hidden');
+      document.getElementById('category-view').classList.remove('hidden');
+      document.getElementById('cat-title').innerText = `نتائج البحث عن: "${query}"`;
+      document.getElementById('cat-badge').innerText = '🔍';
+      renderProducts(results);
+    }
+  </script>
+</body>
+</html>
+```
