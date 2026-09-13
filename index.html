@@ -57,6 +57,80 @@
         .dark .admin-table tr:hover { background-color: rgba(31, 41, 55, 0.6); }
         .admin-tab-active { background-color: #16a34a; color: white; }
         .dark .admin-tab-active { background-color: #15803d; color: white; }
+        
+        /* ============ نظام الوصول الشامل ============ */
+        .visual-alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 300;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.5s ease-out;
+            max-width: 90%;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translate(-50%, -30px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        .visual-alert-success { background: #16a34a; color: white; }
+        .visual-alert-warning { background: #f59e0b; color: white; }
+        .visual-alert-info { background: #3b82f6; color: white; }
+        .visual-alert-danger { background: #dc2626; color: white; }
+        
+        *:focus-visible {
+            outline: 3px solid #16a34a;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        
+        .sign-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            min-height: 40px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+        }
+        
+        .wholesale-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .zone-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .zone-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+        }
+        .zone-card.selected {
+            border-color: #16a34a;
+            background-color: rgba(34, 197, 94, 0.08);
+            box-shadow: 0 0 0 2px #16a34a;
+        }
+        .dark .zone-card.selected {
+            background-color: rgba(34, 197, 94, 0.15);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-dark-bg dark:text-dark-text min-h-screen flex flex-col">
@@ -64,7 +138,7 @@
     <!-- رأس الصفحة -->
     <header class="sticky top-0 z-50 bg-white dark:bg-dark-surface shadow-sm border-b border-gray-200 dark:border-dark-border transition-colors duration-300">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="#" onclick="goHome(); return false;" class="flex items-center gap-2 group">
+            <a href="#" onclick="goHome(); return false;" class="flex items-center gap-2 group" aria-label="الصفحة الرئيسية">
                 <div class="w-10 h-10 bg-brand-500 text-white rounded-lg flex items-center justify-center font-cairo font-bold text-xl group-hover:scale-105 transition-transform">س</div>
                 <span class="font-cairo font-bold text-2xl text-brand-600 dark:text-brand-500">سوق غزة</span>
             </a>
@@ -81,7 +155,19 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span class="hidden lg:block font-cairo font-bold text-sm text-gray-700 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">الأدمن</span>
+                    <span class="hidden xl:block font-cairo font-bold text-sm text-gray-700 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">الأدمن</span>
+                </button>
+
+                <!-- أيقونة بوابة الجملة B2B -->
+                <button onclick="openWholesaleModal()" class="relative flex items-center gap-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition group" aria-label="طلبات الجملة B2B" title="طلبات الجملة للتجار">
+                    <span class="text-xl">🏢</span>
+                    <span class="hidden xl:block font-cairo font-bold text-sm text-amber-600 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-300 transition">الجملة B2B</span>
+                </button>
+
+                <!-- أيقونة نطاق التوصيل -->
+                <button onclick="openDeliveryZoneModal()" class="relative flex items-center gap-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition group" aria-label="مناطق التوصيل" title="مناطق التوصيل">
+                    <span class="text-xl">🗺️</span>
+                    <span class="hidden xl:block font-cairo font-bold text-sm text-gray-700 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">المناطق</span>
                 </button>
 
                 <!-- أيقونة الدليفري -->
@@ -89,11 +175,11 @@
                     <div class="relative">
                         <svg class="w-6 h-6 text-gray-600 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"></path>
                         </svg>
                         <span class="absolute -top-1 -left-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-dark-surface"></span>
                     </div>
-                    <span class="hidden lg:block font-cairo font-bold text-sm text-gray-700 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">الدليفري</span>
+                    <span class="hidden xl:block font-cairo font-bold text-sm text-gray-700 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">الدليفري</span>
                 </button>
 
                 <div class="relative group">
@@ -119,7 +205,7 @@
                     </div>
                 </div>
 
-                <button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                <button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition" aria-label="السلة">
                     <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     <span id="cartCount" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center transform translate-x-1 -translate-y-1">0</span>
                 </button>
@@ -129,30 +215,27 @@
 
     <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         
-        <!-- ==================== الصفحة الرئيسية (التبويبات فقط) ==================== -->
+        <!-- ==================== الصفحة الرئيسية ==================== -->
         <div id="homePage">
-            <!-- شريط البحث -->
             <div class="mb-10 fade-in max-w-3xl mx-auto">
                 <div class="relative flex items-center shadow-sm hover:shadow-md transition-shadow rounded-full">
-                    <input type="text" id="searchInput" onkeydown="if(event.key==='Enter') performSearch()" placeholder="ابحث عن سيارات، عقارات، أجهزة، أو أي شيء في سوق غزة..." class="w-full pl-4 pr-14 py-4 rounded-full border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all font-tajawal text-[15px] sm:text-base">
-                    <button onclick="performSearch()" class="absolute right-2 bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-600 dark:hover:text-white transition-colors p-2.5 rounded-full flex items-center justify-center">
+                    <input type="text" id="searchInput" onkeydown="if(event.key==='Enter') performSearch()" placeholder="ابحث عن سيارات، عقارات، أجهزة، أو أي شيء في سوق غزة..." class="w-full pl-4 pr-14 py-4 rounded-full border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all font-tajawal text-[15px] sm:text-base" aria-label="شريط البحث">
+                    <button onclick="performSearch()" class="absolute right-2 bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 hover:bg-brand-500 hover:text-white dark:hover:bg-brand-600 dark:hover:text-white transition-colors p-2.5 rounded-full flex items-center justify-center" aria-label="بحث">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </button>
                 </div>
             </div>
 
-            <!-- شبكة التصنيفات -->
             <div class="mb-12 fade-in">
                 <h2 class="text-xl font-cairo font-bold mb-6 text-gray-800 dark:text-gray-200">تصفح أقسام سوق غزة</h2>
                 <div id="categoriesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
             </div>
         </div>
 
-        <!-- ==================== صفحة القسم (كل الإعلانات) ==================== -->
+        <!-- ==================== صفحة القسم ==================== -->
         <div id="categoryPage" class="hidden">
-            <!-- شريط علوي -->
             <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-                <button onclick="goHome()" class="flex items-center gap-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-lg transition font-cairo font-bold shadow-sm">
+                <button onclick="goHome()" class="flex items-center gap-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-lg transition font-cairo font-bold shadow-sm" aria-label="العودة للرئيسية">
                     <svg class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     الصفحة الرئيسية
                 </button>
@@ -162,7 +245,6 @@
                 </button>
             </div>
 
-            <!-- عنوان القسم -->
             <div class="mb-6">
                 <h2 class="text-2xl font-cairo font-bold text-gray-800 dark:text-gray-200 flex items-center gap-3 flex-wrap">
                     <span class="w-2 h-8 bg-brand-500 rounded-full"></span>
@@ -171,10 +253,8 @@
                 </h2>
             </div>
 
-            <!-- شبكة إعلانات القسم -->
             <div id="categoryPageGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
 
-            <!-- رسالة عدم وجود إعلانات -->
             <div id="categoryEmptyMsg" class="hidden text-center py-16">
                 <svg class="w-20 h-20 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                 <p class="text-gray-500 dark:text-gray-400 font-cairo text-lg mb-2">لا توجد إعلانات في هذا القسم بعد</p>
@@ -182,10 +262,10 @@
             </div>
         </div>
 
-        <!-- ==================== صفحة نتائج البحث ==================== -->
+        <!-- ==================== صفحة البحث ==================== -->
         <div id="searchResults" class="hidden">
             <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-                <button onclick="clearSearch()" class="flex items-center gap-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-lg transition font-cairo font-bold shadow-sm">
+                <button onclick="clearSearch()" class="flex items-center gap-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-lg transition font-cairo font-bold shadow-sm" aria-label="العودة للرئيسية">
                     <svg class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     الصفحة الرئيسية
                 </button>
@@ -205,7 +285,7 @@
 
     </main>
 
-    <!-- تذييل الصفحة -->
+    <!-- تذييل -->
     <footer class="bg-gray-900 text-gray-400 py-8 text-center mt-auto border-t border-gray-800">
         <div class="container mx-auto px-4">
             <div class="text-white text-xl font-cairo font-bold mb-4">سوق غزة (Gaza Market)</div>
@@ -221,12 +301,12 @@
         <div class="bg-white dark:bg-dark-surface w-full max-w-md rounded-2xl shadow-2xl p-6 mx-4 transform scale-95 transition-transform duration-300" id="modalContent">
             <div class="flex justify-between items-center mb-5">
                 <h3 class="text-2xl font-cairo font-bold text-gray-900 dark:text-white">تأكيد الطلب السريع</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none">
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             <div class="flex items-center gap-4 mb-6 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                <img id="modalProductImage" src="https://placehold.co/80x80/f8fafc/1e293b?text=منتج" class="w-16 h-16 rounded object-cover">
+                <img id="modalProductImage" src="https://placehold.co/80x80/f8fafc/1e293b?text=منتج" class="w-16 h-16 rounded object-cover" alt="">
                 <div class="flex-1 min-w-0">
                     <h4 id="modalProductTitle" class="font-bold text-gray-900 dark:text-white text-sm truncate">اسم المنتج</h4>
                     <div id="modalProductPrice" class="text-brand-600 dark:text-brand-400 font-bold">-- ₪</div>
@@ -242,8 +322,28 @@
                     <input type="tel" id="orderPhone" required dir="ltr" placeholder="05x-xxxxxxx" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-right">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">منطقة التوصيل</label>
+                    <select id="orderZone" onchange="updateOrderTotal()" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition cursor-pointer">
+                        <option value="">-- اختر المنطقة --</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">العنوان بالتفصيل</label>
                     <input type="text" id="orderAddress" required class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                </div>
+                <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-lg p-3">
+                    <div class="flex justify-between text-sm font-cairo mb-1">
+                        <span class="text-gray-600 dark:text-gray-400">سعر المنتج:</span>
+                        <span id="orderProductPrice" class="font-bold text-gray-800 dark:text-gray-200">0 ₪</span>
+                    </div>
+                    <div class="flex justify-between text-sm font-cairo mb-1">
+                        <span class="text-gray-600 dark:text-gray-400">تكلفة التوصيل:</span>
+                        <span id="orderDeliveryCost" class="font-bold text-gray-800 dark:text-gray-200">0 ₪</span>
+                    </div>
+                    <div class="flex justify-between text-base font-cairo font-bold pt-2 border-t border-brand-300 dark:border-brand-700">
+                        <span class="text-gray-900 dark:text-white">الإجمالي:</span>
+                        <span id="orderTotal" class="text-brand-600 dark:text-brand-400">0 ₪</span>
+                    </div>
                 </div>
                 <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl shadow transition transform hover:-translate-y-0.5">تأكيد الطلب (الدفع عند الاستلام)</button>
             </form>
@@ -255,7 +355,7 @@
         <div class="bg-white dark:bg-dark-surface w-full max-w-lg rounded-2xl shadow-2xl p-6 mx-4 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar" id="adModalContent">
             <div class="flex justify-between items-center mb-5">
                 <h3 id="adModalTitle" class="text-2xl font-cairo font-bold text-gray-900 dark:text-white">إضافة إعلان جديد</h3>
-                <button onclick="closeAdModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none">
+                <button onclick="closeAdModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -311,12 +411,12 @@
         </div>
     </div>
 
-    <!-- ==================== شاشة إنشاء حساب جديد ==================== -->
+    <!-- ==================== شاشة إنشاء حساب ==================== -->
     <div id="signupModal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-dark-surface w-full max-w-lg rounded-2xl shadow-2xl p-6 mx-4 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar" id="signupModalContent">
             <div class="flex justify-between items-center mb-5">
                 <h3 class="text-2xl font-cairo font-bold text-gray-900 dark:text-white">إنشاء حساب جديد</h3>
-                <button onclick="closeSignupModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none">
+                <button onclick="closeSignupModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -337,7 +437,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">كلمة المرور <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <input type="password" id="signupPassword" required minlength="8" placeholder="8 أحرف على الأقل (حرف + رقم)" class="w-full px-4 py-2 pl-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                        <button type="button" onclick="togglePassword('signupPassword', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-600 transition">
+                        <button type="button" onclick="togglePassword('signupPassword', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-600 transition" aria-label="إظهار كلمة المرور">
                             <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                         </button>
                     </div>
@@ -347,7 +447,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تأكيد كلمة المرور <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <input type="password" id="signupConfirmPassword" required minlength="8" placeholder="أعد إدخال كلمة المرور" class="w-full px-4 py-2 pl-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                        <button type="button" onclick="togglePassword('signupConfirmPassword', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-600 transition">
+                        <button type="button" onclick="togglePassword('signupConfirmPassword', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-600 transition" aria-label="إظهار كلمة المرور">
                             <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                         </button>
                     </div>
@@ -392,7 +492,7 @@
                     </div>
                     <h3 class="text-2xl font-cairo font-bold text-gray-900 dark:text-white">شركات الدليفري في غزة</h3>
                 </div>
-                <button onclick="closeDeliveryModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none">
+                <button onclick="closeDeliveryModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -400,7 +500,7 @@
         </div>
     </div>
 
-    <!-- ==================== لوحة تحكم الأدمن (CRUD) ==================== -->
+    <!-- ==================== لوحة الأدمن ==================== -->
     <div id="adminModal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300 p-2 sm:p-4">
         <div class="bg-white dark:bg-dark-surface w-full max-w-6xl rounded-2xl shadow-2xl mx-auto transform scale-95 transition-transform duration-300 max-h-[95vh] overflow-hidden flex flex-col" id="adminModalContent">
             
@@ -409,7 +509,7 @@
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <h3 class="text-xl sm:text-2xl font-cairo font-bold">لوحة تحكم الأدمن</h3>
                 </div>
-                <button onclick="closeAdminModal()" class="text-white hover:bg-white/20 p-2 rounded-full transition focus:outline-none">
+                <button onclick="closeAdminModal()" class="text-white hover:bg-white/20 p-2 rounded-full transition focus:outline-none" aria-label="إغلاق">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -514,7 +614,7 @@
         <div class="bg-white dark:bg-dark-surface w-full max-w-md rounded-2xl shadow-2xl p-6 mx-4 transform scale-95 transition-transform duration-300" id="deliveryFormContent">
             <div class="flex justify-between items-center mb-5">
                 <h3 id="deliveryFormTitle" class="text-xl font-cairo font-bold text-gray-900 dark:text-white">إضافة شركة دليفري</h3>
-                <button onclick="closeDeliveryForm()" class="text-gray-500 hover:text-red-500 transition focus:outline-none">
+                <button onclick="closeDeliveryForm()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -542,6 +642,191 @@
                     <button type="submit" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl shadow transition transform hover:-translate-y-0.5">حفظ</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ==================== الحاوية العلوية للإشعارات البصرية ==================== -->
+    <div id="visualAlertContainer"></div>
+
+    <!-- ==================== زر دليل لغة الإشارة العائم ==================== -->
+    <button onclick="openSignGuide()" 
+            class="fixed bottom-5 left-5 z-[90] bg-gradient-to-br from-brand-500 to-brand-700 text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2"
+            aria-label="دليل لغة الإشارة">
+        <span class="sign-icon" style="background:white;color:#16a34a;min-width:28px;min-height:28px;font-size:16px;">🤟</span>
+        <span class="hidden sm:block font-cairo font-bold text-sm">دليل الإشارة</span>
+    </button>
+
+    <!-- ==================== نافذة دليل لغة الإشارة ==================== -->
+    <div id="signGuideModal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-dark-surface w-full max-w-2xl rounded-2xl shadow-2xl p-6 mx-4 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar" id="signGuideContent">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-3">
+                    <span class="sign-icon">🤟</span>
+                    <h3 class="text-2xl font-cairo font-bold text-gray-900 dark:text-white">دليل الإشارة والرموز البصرية</h3>
+                </div>
+                <button onclick="closeSignGuide()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="mb-5 bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/40 rounded-lg p-4 flex items-start gap-3">
+                <svg class="w-6 h-6 text-brand-600 dark:text-brand-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <p class="text-sm font-cairo text-brand-700 dark:text-brand-400 leading-relaxed">
+                    دليل مبسط بالرموز البصرية عالية الوضوح لتسهيل استخدام المنصة على الأشخاص ذوي الإعاقة السمعية. جميع التنبيهات بصرية.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">🏠</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">الصفحة الرئيسية</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">🔍</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">البحث</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">➕</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">إضافة إعلان</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">🚚</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">الدليفري</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">🏢</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">طلبات الجملة</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">⚙️</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">لوحة الأدمن</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">✅</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">طلب مؤكد</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">🔔</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">إشعار جديد</div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
+                    <div class="text-4xl mb-2">📞</div>
+                    <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200">اتصال</div>
+                </div>
+            </div>
+
+            <div class="mt-5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/50 rounded-lg p-4">
+                <h4 class="font-cairo font-bold text-sm text-yellow-800 dark:text-yellow-300 mb-2">🔔 دليل ألوان التنبيهات البصرية:</h4>
+                <ul class="text-xs text-yellow-800 dark:text-yellow-300 font-cairo space-y-1">
+                    <li>✅ <strong>أخضر</strong> = نجاح العملية</li>
+                    <li>🔵 <strong>أزرق</strong> = معلومة عامة</li>
+                    <li>🟡 <strong>أصفر</strong> = تنبيه/تحذير</li>
+                    <li>🔴 <strong>أحمر</strong> = خطأ/مشكلة</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== شاشة طلبات الجملة B2B ==================== -->
+    <div id="wholesaleModal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300 p-2 sm:p-4">
+        <div class="bg-white dark:bg-dark-surface w-full max-w-5xl rounded-2xl shadow-2xl mx-auto transform scale-95 transition-transform duration-300 max-h-[95vh] overflow-hidden flex flex-col" id="wholesaleModalContent">
+            
+            <div class="flex justify-between items-center p-5 border-b border-gray-200 dark:border-dark-border bg-gradient-to-l from-amber-500 to-orange-600 text-white">
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-white/20 rounded-lg text-2xl">🏢</span>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-cairo font-bold">بوابة مبيعات الجملة (B2B)</h3>
+                        <p class="text-xs opacity-90 mt-0.5">مخصصة لأصحاب المتاجر والمكتبات والجهات التجارية</p>
+                    </div>
+                </div>
+                <button onclick="closeWholesaleModal()" class="text-white hover:bg-white/20 p-2 rounded-full transition focus:outline-none" aria-label="إغلاق">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-900/40 p-4">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-xs font-cairo text-amber-800 dark:text-amber-300 leading-relaxed">
+                        <strong>أسعار خاصة للجملة:</strong> خصومات تلقائية من 10 إلى 40% حسب الكمية (10-49 = 10% | 50-99 = 20% | 100-499 = 30% | 500+ = 40%)
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5">
+                <div class="mb-5">
+                    <label class="block text-sm font-cairo font-bold text-gray-700 dark:text-gray-300 mb-2">اختر القسم:</label>
+                    <div id="wholesaleCategories" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div id="wholesaleProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+                <div id="wholesaleSummary" class="hidden mt-6 bg-gradient-to-br from-brand-50 to-white dark:from-brand-900/20 dark:to-dark-surface border-2 border-brand-500 rounded-2xl p-5">
+                    <h4 class="font-cairo font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        ملخص طلب الجملة
+                    </h4>
+                    <div id="wholesaleSummaryItems" class="space-y-2 mb-4"></div>
+                    <div class="border-t-2 border-dashed border-brand-300 dark:border-brand-700 pt-3 mt-3 space-y-2">
+                        <div class="flex justify-between text-sm font-cairo">
+                            <span class="text-gray-600 dark:text-gray-400">الإجمالي قبل الخصم:</span>
+                            <span id="wholesaleSubtotal" class="font-bold text-gray-800 dark:text-gray-200">0 ₪</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-cairo">
+                            <span class="text-gray-600 dark:text-gray-400">قيمة الخصم:</span>
+                            <span id="wholesaleDiscount" class="font-bold text-red-600 dark:text-red-400">-0 ₪</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-cairo font-bold pt-2 border-t border-brand-200 dark:border-brand-800">
+                            <span class="text-gray-900 dark:text-white">الإجمالي النهائي:</span>
+                            <span id="wholesaleTotal" class="text-brand-600 dark:text-brand-400">0 ₪</span>
+                        </div>
+                    </div>
+                    <button onclick="submitWholesaleOrder()" class="w-full mt-4 bg-gradient-to-l from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-cairo font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        إرسال طلب الجملة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== نافذة نطاق التوصيل ==================== -->
+    <div id="deliveryZoneModal" class="fixed inset-0 bg-black/70 z-[110] hidden flex items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-dark-surface w-full max-w-2xl rounded-2xl shadow-2xl p-6 mx-4 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar" id="deliveryZoneContent">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-lg text-xl">🗺️</span>
+                    <h3 class="text-xl font-cairo font-bold text-gray-900 dark:text-white">اختر منطقة التوصيل</h3>
+                </div>
+                <button onclick="closeDeliveryZoneModal()" class="text-gray-500 hover:text-red-500 transition focus:outline-none" aria-label="إغلاق">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <p class="text-xs font-cairo text-gray-500 dark:text-gray-400 mb-4">اختر منطقتك لعرض تكلفة التوصيل والشركات المتاحة وحالة المسارات الآمنة.</p>
+
+            <div id="deliveryZonesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5"></div>
+
+            <div id="selectedZoneInfo" class="hidden bg-brand-50 dark:bg-brand-900/20 border-2 border-brand-500 rounded-xl p-4">
+                <h4 class="font-cairo font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                    <span id="selectedZoneIcon" class="text-2xl"></span>
+                    <span id="selectedZoneName">المنطقة</span>
+                </h4>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div class="bg-white dark:bg-dark-surface rounded-lg p-3">
+                        <div class="text-xs text-gray-500 dark:text-gray-400 font-cairo mb-1">تكلفة التوصيل</div>
+                        <div id="selectedZoneCost" class="text-lg font-cairo font-bold text-brand-600 dark:text-brand-400">0 ₪</div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-surface rounded-lg p-3">
+                        <div class="text-xs text-gray-500 dark:text-gray-400 font-cairo mb-1">حالة التوصيل</div>
+                        <div id="selectedZoneStatus" class="text-sm font-cairo font-bold">--</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-cairo mb-2">شركات الدليفري المتاحة:</div>
+                    <div id="selectedZoneCompanies" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -639,7 +924,7 @@
             grid.innerHTML = categories.map(cat => {
                 const count = ads.filter(a => a.category === cat.id).length;
                 return `
-                    <button onclick="openCategoryPage('${cat.id}')" class="aspect-square bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-2xl shadow-sm flex flex-col items-center justify-center gap-3 hover:border-brand-500 hover:shadow-lg hover:-translate-y-1 transition-all group p-3 text-center cursor-pointer">
+                    <button onclick="openCategoryPage('${cat.id}')" class="aspect-square bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-2xl shadow-sm flex flex-col items-center justify-center gap-3 hover:border-brand-500 hover:shadow-lg hover:-translate-y-1 transition-all group p-3 text-center cursor-pointer" aria-label="قسم ${cat.name}">
                         <div class="p-4 bg-brand-50 dark:bg-brand-900/20 text-brand-600 rounded-full group-hover:scale-110 transition-transform">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${cat.icon}"></path></svg>
                         </div>
@@ -650,7 +935,7 @@
             }).join('');
         }
 
-        /* ==================== التنقل بين الصفحات ==================== */
+        /* ==================== التنقل ==================== */
         function showPage(pageId) {
             document.getElementById('homePage').classList.add('hidden');
             document.getElementById('categoryPage').classList.add('hidden');
@@ -665,7 +950,6 @@
             showPage('homePage');
         }
 
-        /* ==================== فتح صفحة القسم ==================== */
         function openCategoryPage(catId) {
             const cat = categories.find(c => c.id === catId);
             if (!cat) return;
@@ -698,7 +982,6 @@
             if (cat) openAdModal(cat.name, cat.id);
         }
 
-        /* ==================== بطاقة الإعلان ==================== */
         function renderAdCard(ad) {
             const cat = categories.find(c => c.id === ad.category);
             return `
@@ -802,13 +1085,25 @@
         /* ==================== الشاشات المنبثقة ==================== */
         const purchaseModal = document.getElementById('purchaseModal');
         const modalContent = document.getElementById('modalContent');
+        let currentPurchaseAd = null;
 
         function triggerPurchase(adId) {
             const ad = ads.find(a => a.id === adId);
             if (!ad) return;
+            currentPurchaseAd = ad;
             document.getElementById('modalProductTitle').textContent = ad.title;
             document.getElementById('modalProductPrice').textContent = ad.price.toLocaleString() + ' ₪';
             document.getElementById('modalProductImage').src = ad.image;
+            document.getElementById('orderProductPrice').textContent = ad.price.toLocaleString() + ' ₪';
+            
+            // تعبئة قائمة المناطق
+            const zoneSelect = document.getElementById('orderZone');
+            zoneSelect.innerHTML = '<option value="">-- اختر المنطقة --</option>' + 
+                deliveryZones.map(z => `<option value="${z.id}">${z.icon} ${z.name} (${z.cost} ₪)</option>`).join('');
+            
+            document.getElementById('orderDeliveryCost').textContent = '0 ₪';
+            document.getElementById('orderTotal').textContent = ad.price.toLocaleString() + ' ₪';
+            
             purchaseModal.classList.remove('hidden');
             setTimeout(() => {
                 purchaseModal.classList.remove('opacity-0');
@@ -816,6 +1111,18 @@
                 modalContent.classList.add('scale-100');
             }, 10);
         }
+        
+        function updateOrderTotal() {
+            if (!currentPurchaseAd) return;
+            const zoneId = document.getElementById('orderZone').value;
+            const zone = deliveryZones.find(z => z.id === zoneId);
+            const deliveryCost = zone ? zone.cost : 0;
+            const total = currentPurchaseAd.price + deliveryCost;
+            
+            document.getElementById('orderDeliveryCost').textContent = deliveryCost + ' ₪';
+            document.getElementById('orderTotal').textContent = total.toLocaleString() + ' ₪';
+        }
+        
         function closeModal() {
             purchaseModal.classList.add('opacity-0');
             modalContent.classList.remove('scale-100');
@@ -823,11 +1130,19 @@
             setTimeout(() => purchaseModal.classList.add('hidden'), 300);
         }
         purchaseModal.addEventListener('click', (e) => { if (e.target === purchaseModal) closeModal(); });
+        
         function submitOrder(e) {
             e.preventDefault();
+            const zoneId = document.getElementById('orderZone').value;
+            if (!zoneId) {
+                showVisualAlert('⚠️ الرجاء اختيار منطقة التوصيل', 'warning');
+                return;
+            }
+            const zone = deliveryZones.find(z => z.id === zoneId);
             closeModal();
-            showToast("✅ تم تسجيل طلبك بنجاح! سيتم التواصل معك عبر الواتساب.");
+            showVisualAlert(`✅ تم تسجيل طلبك بنجاح! التوصيل إلى ${zone.name} بتكلفة ${zone.cost} ₪`, 'success', 5000);
             e.target.reset();
+            currentPurchaseAd = null;
         }
 
         // نافذة الإعلان
@@ -921,7 +1236,7 @@
                 catId = document.getElementById('adminCategorySelect').value;
             }
             if (!catId) {
-                showToast('⚠ الرجاء اختيار القسم');
+                showVisualAlert('⚠️ الرجاء اختيار القسم', 'warning');
                 return;
             }
 
@@ -1029,11 +1344,11 @@
             const hasLetter = /[A-Za-z\u0600-\u06FF]/.test(password);
             const hasNumber = /[0-9]/.test(password);
             if (password.length < 8 || !hasLetter || !hasNumber) {
-                showToast('⚠ كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حرف ورقم');
+                showVisualAlert('⚠️ كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حرف ورقم', 'warning');
                 return;
             }
             if (password !== confirmPassword) {
-                showToast('⚠ كلمتا المرور غير متطابقتين');
+                showVisualAlert('⚠️ كلمتا المرور غير متطابقتين', 'warning');
                 return;
             }
             users.push({
@@ -1210,7 +1525,6 @@
             showToast("🗑️ تم حذف الإعلان");
         }
 
-        // الأقسام
         function renderAdminCategories() {
             const grid = document.getElementById('adminCategoriesGrid');
             grid.innerHTML = categories.map(cat => {
@@ -1276,7 +1590,6 @@
             showToast("🗑️ تم حذف القسم");
         }
 
-        // الدليفري
         function renderAdminDelivery() {
             const list = document.getElementById('adminDeliveryList');
             if (deliveryCompanies.length === 0) {
@@ -1385,7 +1698,6 @@
             showToast("🗑️ تم حذف شركة الدليفري");
         }
 
-        // المستخدمين
         function renderAdminUsers() {
             const list = document.getElementById('adminUsersList');
             if (users.length === 0) {
@@ -1426,6 +1738,360 @@
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
         }
 
+        /* ============================================================
+           نظام الوصول الشامل - الإشعارات البصرية
+           ============================================================ */
+        function showVisualAlert(message, type = 'success', duration = 3500) {
+            const container = document.getElementById('visualAlertContainer');
+            const alert = document.createElement('div');
+            alert.className = `visual-alert visual-alert-${type}`;
+            alert.setAttribute('role', 'alert');
+            alert.setAttribute('aria-live', 'assertive');
+            
+            const icons = { success: '✅', warning: '⚠️', info: 'ℹ️', danger: '❌' };
+            
+            alert.innerHTML = `
+                <span class="text-2xl">${icons[type] || 'ℹ️'}</span>
+                <span class="font-cairo font-bold text-sm sm:text-base">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ms-auto opacity-70 hover:opacity-100" aria-label="إغلاق التنبيه">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            `;
+            
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.transition = 'opacity 0.5s, transform 0.5s';
+                alert.style.opacity = '0';
+                alert.style.transform = 'translate(-50%, -20px)';
+                setTimeout(() => alert.remove(), 500);
+            }, duration);
+        }
+
+        // دمج showToast مع الإشعارات البصرية
+        const _originalShowToast = showToast;
+        showToast = function(message) {
+            _originalShowToast(message);
+            let type = 'success';
+            if (message.includes('⚠')) type = 'warning';
+            else if (message.includes('❌') || message.includes('🗑️')) type = 'danger';
+            else if (message.includes('ℹ')) type = 'info';
+            showVisualAlert(message, type);
+        };
+
+        /* ============================================================
+           دليل لغة الإشارة
+           ============================================================ */
+        const signGuideModal = document.getElementById('signGuideModal');
+        const signGuideContent = document.getElementById('signGuideContent');
+        
+        function openSignGuide() {
+            signGuideModal.classList.remove('hidden');
+            setTimeout(() => {
+                signGuideModal.classList.remove('opacity-0');
+                signGuideContent.classList.remove('scale-95');
+                signGuideContent.classList.add('scale-100');
+            }, 10);
+        }
+        
+        function closeSignGuide() {
+            signGuideModal.classList.add('opacity-0');
+            signGuideContent.classList.remove('scale-100');
+            signGuideContent.classList.add('scale-95');
+            setTimeout(() => signGuideModal.classList.add('hidden'), 300);
+        }
+        signGuideModal.addEventListener('click', (e) => { if (e.target === signGuideModal) closeSignGuide(); });
+
+        /* ============================================================
+           بوابة مبيعات الجملة B2B
+           ============================================================ */
+        const wholesaleTiers = [
+            { min: 10, max: 49, discount: 0.10 },
+            { min: 50, max: 99, discount: 0.20 },
+            { min: 100, max: 499, discount: 0.30 },
+            { min: 500, max: Infinity, discount: 0.40 }
+        ];
+        
+        let wholesaleCart = [];
+        let currentWholesaleCategory = 'cars';
+        
+        function getWholesaleDiscount(quantity) {
+            const tier = wholesaleTiers.find(t => quantity >= t.min && quantity <= t.max);
+            return tier ? tier.discount : 0;
+        }
+        
+        function getWholesaleTierLabel(quantity) {
+            const tier = wholesaleTiers.find(t => quantity >= t.min && quantity <= t.max);
+            if (!tier) return '';
+            return `${Math.round(tier.discount * 100)}% خصم`;
+        }
+        
+        const wholesaleModal = document.getElementById('wholesaleModal');
+        const wholesaleModalContent = document.getElementById('wholesaleModalContent');
+        
+        function openWholesaleModal() {
+            wholesaleCart = [];
+            currentWholesaleCategory = categories[0]?.id || 'cars';
+            renderWholesaleCategories();
+            renderWholesaleProducts();
+            updateWholesaleSummary();
+            
+            wholesaleModal.classList.remove('hidden');
+            setTimeout(() => {
+                wholesaleModal.classList.remove('opacity-0');
+                wholesaleModalContent.classList.remove('scale-95');
+                wholesaleModalContent.classList.add('scale-100');
+            }, 10);
+            
+            showVisualAlert('🏢 مرحباً بك في بوابة الجملة! خصومات حتى 40% للتجار', 'info', 4000);
+        }
+        
+        function closeWholesaleModal() {
+            wholesaleModal.classList.add('opacity-0');
+            wholesaleModalContent.classList.remove('scale-100');
+            wholesaleModalContent.classList.add('scale-95');
+            setTimeout(() => wholesaleModal.classList.add('hidden'), 300);
+        }
+        wholesaleModal.addEventListener('click', (e) => { if (e.target === wholesaleModal) closeWholesaleModal(); });
+        
+        function renderWholesaleCategories() {
+            const container = document.getElementById('wholesaleCategories');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="selectWholesaleCategory('${cat.id}')" 
+                        class="px-4 py-2 rounded-lg font-cairo font-bold text-sm transition ${cat.id === currentWholesaleCategory ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}">
+                    ${cat.name}
+                </button>
+            `).join('');
+        }
+        
+        function selectWholesaleCategory(catId) {
+            currentWholesaleCategory = catId;
+            renderWholesaleCategories();
+            renderWholesaleProducts();
+        }
+        
+        function renderWholesaleProducts() {
+            const grid = document.getElementById('wholesaleProductsGrid');
+            const catAds = ads.filter(a => a.category === currentWholesaleCategory).slice(0, 12);
+            
+            if (catAds.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-gray-500 font-cairo">لا توجد منتجات في هذا القسم</div>`;
+                return;
+            }
+            
+            grid.innerHTML = catAds.map(ad => {
+                const cartItem = wholesaleCart.find(c => c.adId === ad.id);
+                const qty = cartItem?.quantity || 0;
+                const discount = getWholesaleDiscount(qty);
+                const finalPrice = ad.price * (1 - discount);
+                
+                return `
+                    <div class="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="h-32 bg-gray-100 dark:bg-gray-800 overflow-hidden relative">
+                            <img src="${ad.image}" class="w-full h-full object-cover" alt="${ad.title}" onerror="this.src='https://placehold.co/300x200/e2e8f0/475569?text=منتج'">
+                            <span class="absolute top-2 right-2 wholesale-badge">B2B</span>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200 mb-1 truncate">${ad.title}</h3>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-gray-500 dark:text-gray-400">السعر القطاعي:</span>
+                                <span class="text-xs font-bold text-gray-600 dark:text-gray-300 line-through">${ad.price.toLocaleString()} ₪</span>
+                            </div>
+                            ${qty > 0 ? `
+                                <div class="flex items-center justify-between mb-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg p-2">
+                                    <span class="text-xs font-cairo font-bold text-amber-700 dark:text-amber-400">${getWholesaleTierLabel(qty)}:</span>
+                                    <span class="text-sm font-bold text-amber-600 dark:text-amber-400">${finalPrice.toFixed(2)} ₪</span>
+                                </div>
+                            ` : ''}
+                            <div class="flex items-center gap-2">
+                                <button onclick="updateWholesaleQty(${ad.id}, -1)" class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 font-bold transition" aria-label="تقليل">−</button>
+                                <input type="number" 
+                                       value="${qty}" 
+                                       min="0" 
+                                       max="9999"
+                                       onchange="setWholesaleQty(${ad.id}, this.value)"
+                                       class="w-16 text-center px-2 py-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-bold">
+                                <button onclick="updateWholesaleQty(${ad.id}, 1)" class="w-8 h-8 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold transition" aria-label="زيادة">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateWholesaleQty(adId, delta) {
+            const idx = wholesaleCart.findIndex(c => c.adId === adId);
+            if (idx > -1) {
+                wholesaleCart[idx].quantity = Math.max(0, wholesaleCart[idx].quantity + delta);
+                if (wholesaleCart[idx].quantity === 0) wholesaleCart.splice(idx, 1);
+            } else if (delta > 0) {
+                wholesaleCart.push({ adId, quantity: 1 });
+            }
+            renderWholesaleProducts();
+            updateWholesaleSummary();
+        }
+        
+        function setWholesaleQty(adId, value) {
+            const qty = Math.max(0, parseInt(value) || 0);
+            const idx = wholesaleCart.findIndex(c => c.adId === adId);
+            if (qty === 0) {
+                if (idx > -1) wholesaleCart.splice(idx, 1);
+            } else if (idx > -1) {
+                wholesaleCart[idx].quantity = qty;
+            } else {
+                wholesaleCart.push({ adId, quantity: qty });
+            }
+            renderWholesaleProducts();
+            updateWholesaleSummary();
+        }
+        
+        function updateWholesaleSummary() {
+            const summary = document.getElementById('wholesaleSummary');
+            const itemsDiv = document.getElementById('wholesaleSummaryItems');
+            
+            if (wholesaleCart.length === 0) {
+                summary.classList.add('hidden');
+                return;
+            }
+            
+            summary.classList.remove('hidden');
+            
+            let subtotal = 0;
+            let total = 0;
+            
+            itemsDiv.innerHTML = wholesaleCart.map(item => {
+                const ad = ads.find(a => a.id === item.adId);
+                if (!ad) return '';
+                const discount = getWholesaleDiscount(item.quantity);
+                const lineSubtotal = ad.price * item.quantity;
+                const lineTotal = lineSubtotal * (1 - discount);
+                subtotal += lineSubtotal;
+                total += lineTotal;
+                
+                return `
+                    <div class="flex items-center justify-between bg-white dark:bg-dark-surface rounded-lg p-2">
+                        <div class="flex-1 min-w-0">
+                            <div class="font-cairo font-bold text-sm text-gray-800 dark:text-gray-200 truncate">${ad.title}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">${item.quantity} × ${ad.price.toLocaleString()} ₪ = ${lineSubtotal.toLocaleString()} ₪</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-brand-600 dark:text-brand-400">${lineTotal.toFixed(2)} ₪</div>
+                            ${discount > 0 ? `<div class="text-[10px] text-amber-600 dark:text-amber-400 font-bold">خصم ${Math.round(discount * 100)}%</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('wholesaleSubtotal').textContent = subtotal.toLocaleString() + ' ₪';
+            document.getElementById('wholesaleDiscount').textContent = '-' + (subtotal - total).toFixed(2) + ' ₪';
+            document.getElementById('wholesaleTotal').textContent = total.toFixed(2) + ' ₪';
+        }
+        
+        function submitWholesaleOrder() {
+            if (wholesaleCart.length === 0) {
+                showVisualAlert('⚠️ السلة فارغة! أضف منتجات أولاً', 'warning');
+                return;
+            }
+            const total = document.getElementById('wholesaleTotal').textContent;
+            closeWholesaleModal();
+            showVisualAlert(`✅ تم إرسال طلب الجملة بنجاح! الإجمالي: ${total}. سنتواصل معك خلال 24 ساعة.`, 'success', 5000);
+            wholesaleCart = [];
+        }
+
+        /* ============================================================
+           نطاقات التوصيل الجغرافية
+           ============================================================ */
+        const deliveryZones = [
+            { id: 'north', name: 'شمال غزة', icon: '🌾', cost: 15, status: 'available', statusText: 'متاح', companies: ['ديليفري غزة', 'سكة ديلفري'], safeRoutes: true },
+            { id: 'gaza', name: 'مدينة غزة', icon: '🏙️', cost: 10, status: 'available', statusText: 'متاح', companies: ['ديليفري غزة', 'الصقور دليفري', 'سكة ديلفري'], safeRoutes: true },
+            { id: 'middle', name: 'المحافظة الوسطى', icon: '🏘️', cost: 20, status: 'available', statusText: 'متاح', companies: ['ديلفري البلد', 'ديليفري غزة'], safeRoutes: true },
+            { id: 'khan', name: 'خان يونس', icon: '🌴', cost: 25, status: 'limited', statusText: 'متاح بشكل محدود', companies: ['سكة ديلفري', 'ديليفري غزة'], safeRoutes: false },
+            { id: 'rafah', name: 'رفح', icon: '🏜️', cost: 30, status: 'limited', statusText: 'متاح بشكل محدود', companies: ['ديليفري غزة'], safeRoutes: false }
+        ];
+        
+        const deliveryZoneModal = document.getElementById('deliveryZoneModal');
+        const deliveryZoneContent = document.getElementById('deliveryZoneContent');
+        let selectedZone = null;
+        
+        function openDeliveryZoneModal() {
+            renderDeliveryZones();
+            deliveryZoneModal.classList.remove('hidden');
+            setTimeout(() => {
+                deliveryZoneModal.classList.remove('opacity-0');
+                deliveryZoneContent.classList.remove('scale-95');
+                deliveryZoneContent.classList.add('scale-100');
+            }, 10);
+        }
+        
+        function closeDeliveryZoneModal() {
+            deliveryZoneModal.classList.add('opacity-0');
+            deliveryZoneContent.classList.remove('scale-100');
+            deliveryZoneContent.classList.add('scale-95');
+            setTimeout(() => deliveryZoneModal.classList.add('hidden'), 300);
+        }
+        deliveryZoneModal.addEventListener('click', (e) => { if (e.target === deliveryZoneModal) closeDeliveryZoneModal(); });
+        
+        function renderDeliveryZones() {
+            const list = document.getElementById('deliveryZonesList');
+            list.innerHTML = deliveryZones.map(zone => {
+                const statusColor = zone.status === 'available' ? 'text-green-600 dark:text-green-400' : 
+                                   zone.status === 'limited' ? 'text-yellow-600 dark:text-yellow-400' : 
+                                   'text-red-600 dark:text-red-400';
+                const statusBg = zone.status === 'available' ? 'bg-green-100 dark:bg-green-900/30' : 
+                                zone.status === 'limited' ? 'bg-yellow-100 dark:bg-yellow-900/30' : 
+                                'bg-red-100 dark:bg-red-900/30';
+                
+                return `
+                    <div onclick="selectDeliveryZone('${zone.id}')" 
+                         class="zone-card bg-white dark:bg-dark-surface border-2 border-gray-200 dark:border-dark-border rounded-xl p-4 ${selectedZone?.id === zone.id ? 'selected' : ''}">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl">${zone.icon}</span>
+                            <div class="flex-1">
+                                <h4 class="font-cairo font-bold text-gray-900 dark:text-white mb-1">${zone.name}</h4>
+                                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                                    <span class="text-xs font-cairo font-bold px-2 py-0.5 rounded-full ${statusBg} ${statusColor}">${zone.statusText}</span>
+                                    ${zone.safeRoutes ? `<span class="text-[10px] bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full font-cairo font-bold">🛡️ مسارات آمنة</span>` : ''}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 font-cairo">
+                                    🚚 تكلفة التوصيل: <strong class="text-brand-600 dark:text-brand-400">${zone.cost} ₪</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function selectDeliveryZone(zoneId) {
+            selectedZone = deliveryZones.find(z => z.id === zoneId);
+            renderDeliveryZones();
+            
+            const info = document.getElementById('selectedZoneInfo');
+            info.classList.remove('hidden');
+            
+            document.getElementById('selectedZoneIcon').textContent = selectedZone.icon;
+            document.getElementById('selectedZoneName').textContent = selectedZone.name;
+            document.getElementById('selectedZoneCost').textContent = selectedZone.cost + ' ₪';
+            
+            const statusEl = document.getElementById('selectedZoneStatus');
+            if (selectedZone.status === 'available') {
+                statusEl.textContent = '✅ ' + selectedZone.statusText;
+                statusEl.className = 'text-sm font-cairo font-bold text-green-600 dark:text-green-400';
+            } else if (selectedZone.status === 'limited') {
+                statusEl.textContent = '⚠️ ' + selectedZone.statusText;
+                statusEl.className = 'text-sm font-cairo font-bold text-yellow-600 dark:text-yellow-400';
+            } else {
+                statusEl.textContent = '❌ غير متاح';
+                statusEl.className = 'text-sm font-cairo font-bold text-red-600 dark:text-red-400';
+            }
+            
+            document.getElementById('selectedZoneCompanies').innerHTML = selectedZone.companies.map(c => 
+                `<span class="text-xs bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 px-2 py-1 rounded-full font-cairo font-bold">${c}</span>`
+            ).join('');
+            
+            showVisualAlert(`📍 تم اختيار ${selectedZone.name} - تكلفة التوصيل: ${selectedZone.cost} ₪`, 'info');
+        }
+
         /* ==================== Escape ==================== */
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -1435,6 +2101,9 @@
                 if (!deliveryModal.classList.contains('hidden')) closeDeliveryModal();
                 if (!deliveryFormModal.classList.contains('hidden')) closeDeliveryForm();
                 if (!adminModal.classList.contains('hidden')) closeAdminModal();
+                if (!signGuideModal.classList.contains('hidden')) closeSignGuide();
+                if (!wholesaleModal.classList.contains('hidden')) closeWholesaleModal();
+                if (!deliveryZoneModal.classList.contains('hidden')) closeDeliveryZoneModal();
             }
         });
 
